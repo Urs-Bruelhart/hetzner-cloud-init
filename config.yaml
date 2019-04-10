@@ -12,7 +12,7 @@ users:
     shell: /bin/bash
     passwd: $6$UnXq642da9EfkQfH$TNr4OeOsSzye7OLxzS79tRs5kSyE3LyhFQPSjLWEdsDC.1TA5vARJt7TrDdwqCcpHrEYrXl02vycJVFx.GvZd.
     ssh-authorized-keys:
-      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILhDy1bE4YR4xae00esba+sbpprbOyr+EHckyUG82np3 steve20190410111254bst
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII/brQJgzWCria3ka5ckacdWMgNMSKp+iANSxoDKj6CS steve20190410171934bst
 runcmd:
   - sed -i 's/[# ]*set tabsize 8/set tabsize 4/g' /etc/nanorc
 # Configure SSH
