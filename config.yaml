@@ -1,6 +1,6 @@
 #cloud-config
 ssh_keys:
- rsa_private: |
+  rsa_private: |
     -----BEGIN RSA PRIVATE KEY-----
     MIIBxwIBAAJhAKD0YSHy73nUgysO13XsJmd4fHiFyQ+00R7VVu2iV9Qcon2LZS/x
     1cydPZ4pQpfjEha6WxZ6o8ci/Ea/w0n+0HGPwaxlEG2Z9inNtj3pgFrYcRztfECb
@@ -18,8 +18,8 @@ ssh_keys:
 locale: en_GB.UTF-8
 timezone: Europe/London
 #package_update: true    # Implied with `package_upgrade: true`
-package_upgrade: true
-package_reboot_if_required: true
+#package_upgrade: true
+#package_reboot_if_required: true
 users:
 # Create new user `steve`
   - name: steve
@@ -33,7 +33,7 @@ runcmd:
   - sed -i 's/[# ]*set tabsize 8/set tabsize 4/g' /etc/nanorc
 # Configure SSH
   - sed -i 's/[#]*Port 22/Port 7822/g' /etc/ssh/sshd_config
-  - sed -i 's/#HostKey \/etc\/ssh\/ssh_host_ed25519_key/HostKey \/etc\/ssh\/ssh_host_ed25519_key/g' /etc/ssh/sshd_config
+  #- sed -i 's/#HostKey \/etc\/ssh\/ssh_host_ed25519_key/HostKey \/etc\/ssh\/ssh_host_ed25519_key/g' /etc/ssh/sshd_config
   - sed -i 's/[#]*PermitRootLogin yes/PermitRootLogin prohibit-password/g' /etc/ssh/sshd_config
   #- sed -i '/prohibit-password/! s/[#]*PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config
   - sed -i 's/[#]*PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
