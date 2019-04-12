@@ -1,5 +1,8 @@
 #cloud-config
 ssh_keys:
+  rsa_private: |
+  rsa_public:
+      
   ecdsa_private: |
     -----BEGIN OPENSSH PRIVATE KEY-----
     b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAaAAAABNlY2RzYS
@@ -11,6 +14,15 @@ ssh_keys:
     MDQxMDExMDM1N2JzdAECAwQFBgc=
     -----END OPENSSH PRIVATE KEY-----
   ecdsa_public: ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBDhrNJda8U0vZ1ptwk8Vp2tX3S3ldMqN4i7vTYAZHuqNv9jgi5/hJk3PUZIIk3je2GoR7jpbJ21xxbFH//LtP4A= HostKey20190410110357bst
+  ed25519_private: |
+    -----BEGIN OPENSSH PRIVATE KEY-----
+    b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
+    QyNTUxOQAAACBBrdbD1RLEZJZlyGikrAdjXLtB8dD/v+uaNBBbGH1ovQAAAKCe4gGDnuIB
+    gwAAAAtzc2gtZWQyNTUxOQAAACBBrdbD1RLEZJZlyGikrAdjXLtB8dD/v+uaNBBbGH1ovQ
+    AAAEAn3rMPwTAIjKofy5FztcZc5tDod//hiPb+rHq2ikhFfEGt1sPVEsRklmXIaKSsB2Nc
+    u0Hx0P+/65o0EFsYfWi9AAAAGEhvc3RLZXkyMDE5MDQxMDEwNTk1MGJzdAECAwQF
+    -----END OPENSSH PRIVATE KEY-----
+  ed25519_public: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEGt1sPVEsRklmXIaKSsB2Ncu0Hx0P+/65o0EFsYfWi9 HostKey20190410105950bst
 locale: en_GB.UTF-8
 timezone: Europe/London
 #package_update: true    # Implied with `package_upgrade: true`
