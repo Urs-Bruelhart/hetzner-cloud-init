@@ -1,0 +1,60 @@
+#cloud-config
+ssh_keys:
+  ecdsa_private: |
+    -----BEGIN OPENSSH PRIVATE KEY-----
+    b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAaAAAABNlY2RzYS
+    1zaGEyLW5pc3RwMjU2AAAACG5pc3RwMjU2AAAAQQQ4azSXWvFNL2dabcJPFadrV90t5XTK
+    jeIu702AGR7qjb/Y4Iuf4SZNz1GSCJN43thqEe46WydtccWxR//y7T+AAAAAuGsH9KNrB/
+    SjAAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBDhrNJda8U0vZ1pt
+    wk8Vp2tX3S3ldMqN4i7vTYAZHuqNv9jgi5/hJk3PUZIIk3je2GoR7jpbJ21xxbFH//LtP4
+    AAAAAhAIfHN2qRzDx62zMVpWH29wY+curmfx3WGB8IkaGK+LwLAAAAGEhvc3RLZXkyMDE5
+    MDQxMDExMDM1N2JzdAECAwQFBgc=
+    -----END OPENSSH PRIVATE KEY-----
+  ecdsa_public: ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBDhrNJda8U0vZ1ptwk8Vp2tX3S3ldMqN4i7vTYAZHuqNv9jgi5/hJk3PUZIIk3je2GoR7jpbJ21xxbFH//LtP4A= HostKey20190410110357bst
+locale: en_GB.UTF-8
+timezone: Europe/London
+#package_update: true    # Implied with `package_upgrade: true`
+#package_upgrade: true
+#package_reboot_if_required: true
+users:
+# Create new user `steve`
+  - name: steve
+    groups: sudo, www-data
+    lock_passwd: false
+    shell: /bin/bash
+    passwd: $6$UnXq642da9EfkQfH$TNr4OeOsSzye7OLxzS79tRs5kSyE3LyhFQPSjLWEdsDC.1TA5vARJt7TrDdwqCcpHrEYrXl02vycJVFx.GvZd.
+    ssh-authorized-keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILeHZbBLINeL0e4uV97XMw4hadzZezOkBdyzlZ51g1bw steve20190411082259bst
+runcmd:
+  - sed -i 's/[# ]*set tabsize 8/set tabsize 4/g' /etc/nanorc
+# Configure SSH
+  - sed -i 's/[#]*Port 22/Port 7822/g' /etc/ssh/sshd_config
+  #- sed -i 's/#HostKey \/etc\/ssh\/ssh_host_ed25519_key/HostKey \/etc\/ssh\/ssh_host_ed25519_key/g' /etc/ssh/sshd_config
+  #- sed -i 's/[#]*PermitRootLogin yes/PermitRootLogin prohibit-password/g' /etc/ssh/sshd_config
+  #- sed -i '/prohibit-password/! s/[#]*PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config
+  #- sed -i 's/[#]*PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
+  - /etc/init.d/ssh restart
+# Configure Firewall
+  - ufw default deny incoming
+  - ufw default allow outgoing
+  - ufw allow 80/tcp
+  - ufw allow 443/tcp
+  - ufw allow 7822/tcp
+  #- ufw allow 10000/tcp    # For Webmin
+  - ufw enable
+# Configure .bashrc for `root`
+  - sed -i 's/($debian_chroot)}\\u\@\\h:\\/($debian_chroot)}\\u\@\`curl -s http:\/\/icanhazip.com\`:\\/g' /root/.bashrc
+  - sed -i 's/($debian_chroot)}\\\[\\033\[01;32m\\\]\\u\@\\h/($debian_chroot)}\\\[\\033\[01;32m\\\]\\u\@\`curl -s http:\/\/icanhazip.com\`/g' /root/.bashrc
+# Configure .bashrc for `steve`
+  - sed -i -E 's/secure_path="(.*)"/secure_path="\1:\/home\/steve\/scripts"/g' /etc/sudoers
+  - sed -i 's/($debian_chroot)}\\u\@\\h:\\/($debian_chroot)}\\u\@\`curl -s http:\/\/icanhazip.com\`:\\/g' /home/steve/.bashrc
+  - sed -i 's/($debian_chroot)}\\\[\\033\[01;32m\\\]\\u\@\\h/($debian_chroot)}\\\[\\033\[01;32m\\\]\\u\@\`curl -s http:\/\/icanhazip.com\`/g' /home/steve/.bashrc
+  - echo "alias wp-install='bash /home/steve/scripts/install-wordpress.sh'" >> /home/steve/.bashrc
+  - echo "alias wp-remove='bash /home/steve/scripts/remove-wordpress.sh'" >> /home/steve/.bashrc
+  - echo "alias vhost-add='bash /home/steve/scripts/add-vhost.sh'" >> /home/steve/.bashrc
+  - echo "alias vhost-del='bash /home/steve/scripts/delete-vhost.sh'" >> /home/steve/.bashrc
+  - echo "alias update='sudo -- sh -c \"apt update; apt upgrade -y; apt dist-upgrade -y; apt autoremove -y; apt autoclean -y\"'" >> /home/steve/.bashrc
+  - echo "alias shutdown-r='sudo shutdown -r now'" >> /home/steve/.bashrc
+  - export PATH=$PATH:/home/steve/scripts
+# Force password change for `steve` on initial login
+  - chage -d 0 steve
